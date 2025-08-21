@@ -1,0 +1,47 @@
+# .github/workflows/deploy.yml
+
+# This workflow is used to deploy the application to the kubernetes cluster in the dev environment
+# The job can deploy a branch or a tag, if both are provided, the tag will be used
+name: Deploy K8s DEV
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to deploy'
+        required: false
+        default: 'develop'
+        type: choice
+        options:
+          - develop
+          - main
+      other_branch:
+        description: 'Other branch to deploy (takes precedence over branch if both are provided)'
+        required: false
+      tag:
+        description: 'Tag to deploy (takes precedence over branch or other_branch if both are provided)'
+        required: false
+      skip_build:
+        description: 'Skip bulding and pushing the image to the registry, use when only the deployment has changed'
+        required: false
+        default: false
+        type: boolean
+      skip_deploy:
+        description: 'Skip deploying the application to the kubernetes cluster, use to test the build or modification of deployment files'
+        required: false
+        default: false
+        type: boolean
+jobs:
+  deploy:
+    uses: hocelot/github-cicd/.github/workflows/python-service-deploy-k8s-dev.yml@main
+    with:
+      deployment_name: ${{ github.event.repository.name }}
+      # Pass either tag, branch or other_branch to the reusable workflow
+      branch: ${{ github.event.inputs.branch }}
+      other_branch: ${{ github.event.inputs.other_branch }}
+      tag: ${{ github.event.inputs.tag }}
+      skip_build: "${{ github.event.inputs.skip_build }}"
+      skip_deploy: "${{ github.event.inputs.skip_deploy }}"
+    secrets:
+      GIT_USER: ${{ secrets.GIT_USER }}
+      GIT_TOKEN: ${{ secrets.GIT_TOKEN }}

@@ -1,0 +1,46 @@
+# ZRS Escampa Configuration
+# This configuration contains default values that will be overridden by Config Server
+# If Config Server is working properly, these values should NOT be used
+
+# Application Configuration - Default (will be overridden)
+application:
+  name: rdt-724-00128-nowo-es  # Correct name - required by Config Server
+  product-type: NOWO                # ZRS, NOWO, ASI
+
+# Server Configuration - Defaults (Config Server should override)
+server:
+  host: 0.0.0.0                   # Container-friendly host binding
+  port: 8083                      # Config Server should set 8083
+  # Thread pool configuration - Basic defaults (Config Server should optimize)
+  thread-pool:
+    max-workers: 1                # Minimal - should be overridden 
+    queue-size: 10                # Small - should be overridden
+
+# ML Models Configuration - Basic defaults
+models:
+  delivery-path: ./delivery/      # Basic path - may be overridden
+
+# Config Server Configuration - MUST be enabled to get correct config
+config-server:
+  enabled: false
+  url: http://datalab-config-server:8888
+
+# Logging Configuration - Basic defaults (Config Server should provide better format)
+logging:
+  level: DEBUG                  # Basic level - should be overridden to INFO
+  # No format specified - Config Server should provide detailed format
+
+# Audit Configuration - DISABLED by default (Config Server should enable)
+audit:
+  enabled: false                 # DISABLED - Config Server should enable this
+  fail-on-error: false           # Non-critical - should be overridden
+
+# Operational Data Configuration - DISABLED by default (Config Server should enable)
+operational-data:
+  enabled: false                  # DISABLED - Config Server should enable this
+  fail-on-error: false           # Non-critical - should be overridden
+
+# OpenTelemetry Configuration - Basic defaults
+telemetry:
+  enabled: false                  # Disabled by default
+  service-name: datalab-api-default  # Generic name - should be overridden 

@@ -1,0 +1,44 @@
+# .github/workflows/deploy.yml
+
+# This workflow is used to run the tests and Sonar on the branch or tag
+name: Test and Quality
+
+# Run every time a push is made to the develop branch or selected branch or tag on manual trigger
+on:
+  push:
+    branches:
+      - develop
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to run on'
+        required: true
+        default: 'develop'
+        type: choice
+        options:
+          - develop
+          - main
+      other_branch:
+        description: 'Other branch to run on, takes precedence over branch if both are provided'
+        required: false
+      tag:
+        description: 'Tag to run on, takes precedence over branch or other_branch if both are provided'
+        required: false
+# Call the reusable job quality-python-service.yml with the following secrets:
+jobs:
+  deploy:
+    uses: hocelot/github-cicd/.github/workflows/python-project-quality.yml@main
+    with:
+      # Pass the branch parameter to the reusable workflow
+      # Use inputs.branch for manual trigger or github.ref_name for push events
+      branch: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.branch || github.ref_name }}
+      # Pass the other_branch and tag parameters to the reusable workflow
+      other_branch: ${{ github.event.inputs.other_branch }}
+      # Pass the tag parameter to the reusable workflow
+      tag: ${{ github.event.inputs.tag }}
+    secrets:
+      NEXUS_USER: ${{ secrets.NEXUS_USERNAME }}
+      NEXUS_PASS: ${{ secrets.NEXUS_PASSWORD }}
+      GIT_USER: ${{ secrets.GIT_USER }}
+      GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
+      SONARCLOUD_TOKEN: ${{ secrets.SONARCLOUD_TOKEN }}

@@ -1,0 +1,1661 @@
+openapi: 3.1.0
+info:
+  title: FastAPI
+  version: 0.1.0
+paths:
+  /health:
+    get:
+      tags:
+      - HEALTH
+      summary: Comprehensive Health Check
+      description: "Comprehensive health check endpoint for monitoring system component\
+        \ availability.\n\nThis endpoint executes in a dedicated thread to avoid blocking\
+        \ the event loop,\nsimulating Java servlet behavior where each HTTP request\
+        \ gets its own thread.\n\nReturns\n-------\ndict\n    Complete health status\
+        \ with all component details"
+      operationId: health_health_get
+      responses:
+        '200':
+          description: All system components are healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthCheckResponse'
+        '503':
+          description: One or more system components are unhealthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthCheckResponse'
+  /openapi:
+    get:
+      tags:
+      - API_DOCUMENTATION
+      summary: Get API Documentation
+      description: Download the complete API specification in YAML format.
+      operationId: get_openapi_specification_yaml_openapi_get
+      responses:
+        '200':
+          description: API specification in YAML format
+          content:
+            application/json:
+              schema: {}
+        '500':
+          description: Failed to generate specification
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPErrorResponse'
+  /api/openapi/json:
+    get:
+      tags:
+      - API_DOCUMENTATION
+      summary: Get API Documentation (JSON)
+      description: Download the API specification in JSON format.
+      operationId: get_openapi_specification_json_api_openapi_json_get
+      responses:
+        '200':
+          description: API specification in JSON format
+          content:
+            application/json:
+              schema: {}
+        '500':
+          description: Failed to generate specification
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPErrorResponse'
+  /api/openapi/yaml:
+    get:
+      tags:
+      - API_DOCUMENTATION
+      summary: Get API Documentation (YAML)
+      description: Download the API specification in YAML format.
+      operationId: get_openapi_specification_yaml_explicit_api_openapi_yaml_get
+      responses:
+        '200':
+          description: API specification in YAML format
+          content:
+            application/json:
+              schema: {}
+        '500':
+          description: Failed to generate specification
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPErrorResponse'
+  /scoring_service:
+    post:
+      tags:
+      - SCORING
+      summary: Calculate Risk Score
+      description: Process financial data and generate a risk assessment score using
+        machine learning models.
+      operationId: get_score_scoring_service_post
+      requestBody:
+        description: List of financial data objects for risk scoring
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScoringRequest'
+            example:
+            - traceId: trace-123-456
+              operationTraceId: op-789-012
+              clientId: client-001
+              userId: user-001
+              endpoint: /scoring_service
+              country: ES
+              batchId: batch-001
+              income: 50000.0
+              age: 35
+        required: true
+      responses:
+        '200':
+          description: Risk score calculated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessfulResponse'
+              example:
+                score: 0.564357346
+        '400':
+          description: Invalid input format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPErrorResponse'
+              example:
+                errorMessage: Request must be a list of objects
+                errorType: VALIDATION_ERROR
+        '422':
+          description: Data validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPErrorResponse'
+              example:
+                errorMessage: Required fields are missing or invalid
+                errorType: VALIDATION_ERROR
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPErrorResponse'
+              example:
+                errorMessage: Processing error occurred
+                errorType: INTERNAL_SERVER_ERROR
+      components:
+        schemas:
+          ScoringRequest:
+            type: array
+            items:
+              properties:
+                traceId:
+                  title: Traceid
+                  type: string
+                operationTraceId:
+                  title: Operationtraceid
+                  type: string
+                clientId:
+                  title: Clientid
+                  type: string
+                userId:
+                  title: Userid
+                  type: string
+                endpoint:
+                  title: Endpoint
+                  type: string
+                country:
+                  title: Country
+                  type: string
+                batchId:
+                  title: Batchid
+                  type: string
+                idCheck_score:
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+                  title: Idcheck Score
+                idCheck_correlation:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Idcheck Correlation
+                idCheck_alert:
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+                  title: Idcheck Alert
+                emailValidation_valid:
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+                  title: Emailvalidation Valid
+                emailValidation_domain:
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+                  title: Emailvalidation Domain
+                emailValidation_provider:
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+                  title: Emailvalidation Provider
+                emailValidation_syntaxError:
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+                  title: Emailvalidation Syntaxerror
+                emailValidation_domainError:
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+                  title: Emailvalidation Domainerror
+                emailValidation_disposable:
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+                  title: Emailvalidation Disposable
+                emailValidation_freemail:
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+                  title: Emailvalidation Freemail
+                emailVerification_verified:
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+                  title: Emailverification Verified
+                emailVerification_status:
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+                  title: Emailverification Status
+                emailVerification_deferred:
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+                  title: Emailverification Deferred
+                emailVerification_catchAll:
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+                  title: Emailverification Catchall
+                phoneValidation_valid:
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+                  title: Phonevalidation Valid
+                phoneValidation_type:
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+                  title: Phonevalidation Type
+                phoneValidation_location:
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+                  title: Phonevalidation Location
+                phoneValidation_country:
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+                  title: Phonevalidation Country
+                phoneValidation_mobile:
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+                  title: Phonevalidation Mobile
+                phoneVerification_valid:
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+                  title: Phoneverification Valid
+                phoneVerification_verified:
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+                  title: Phoneverification Verified
+                phoneVerification_status:
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+                  title: Phoneverification Status
+                phoneVerification_mobile:
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+                  title: Phoneverification Mobile
+                phoneVerification_ported:
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+                  title: Phoneverification Ported
+                phoneVerification_mcc:
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+                  title: Phoneverification Mcc
+                phoneVerification_mnc:
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+                  title: Phoneverification Mnc
+                phoneVerification_currentNetwork:
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+                  title: Phoneverification Currentnetwork
+                phoneVerification_originNetwork:
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+                  title: Phoneverification Originnetwork
+                phoneVerification_portedNetwork:
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+                  title: Phoneverification Portednetwork
+                phoneVerification_type:
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+                  title: Phoneverification Type
+                phoneVerification_location:
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+                  title: Phoneverification Location
+                geoCheck_score:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Geocheck Score
+                geoCheck_parsedAddress_country:
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+                  title: Geocheck Parsedaddress Country
+                geoCheck_parsedAddress_level1:
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+                  title: Geocheck Parsedaddress Level1
+                geoCheck_parsedAddress_level2:
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+                  title: Geocheck Parsedaddress Level2
+                witnesses_sqm:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Witnesses Sqm
+                witnesses_sqmPrice:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Witnesses Sqmprice
+                witnesses_estimatedPrice:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Witnesses Estimatedprice
+                economics_epaT4_2023TrimestreActual:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Epat4 2023Trimestreactual
+                economics_epaT4_2023VarTrimAntDif:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Epat4 2023Vartrimantdif
+                economics_epaT4_2023VarTrimAntPct:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Epat4 2023Vartrimantpct
+                economics_epaT4_2023VarTrimAnoAntDif:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Epat4 2023Vartrimanoantdif
+                economics_epaT4_2023VarTrimAnoAntPct:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Epat4 2023Vartrimanoantpct
+                economics_defCa001EnfInfeccIntest:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Defca001Enfinfeccintest
+                economics_defCa001008EnfInfeccParas:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Defca001008Enfinfeccparas
+                economics_defCa001102TodasCausas:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Defca001102Todascausas
+                economics_defCa002Tuberculosis:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Defca002Tuberculosis
+                economics_defCa003EnfMeningo:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Defca003Enfmeningo
+                economics_defCa006Sida:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Defca006Sida
+                economics_defCa009TumorLabioBocaFaringe:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Defca009Tumorlabiobocafaringe
+                economics_defCa009041Tumores:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Defca009041Tumores
+                economics_defCa00cSindInflamCovid:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Defca00Csindinflamcovid
+                economics_defCa012TumorColon:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Defca012Tumorcolon
+                economics_defCa015TumorPancreas:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Defca015Tumorpancreas
+                economics_defCa018TumorTraqueaBronqPulmon:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Defca018Tumortraqueabronqpulmon
+                economics_defCa023TumorMama:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Defca023Tumormama
+                economics_defCa024TumorCuelloUtero:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Defca024Tumorcuelloutero
+                economics_defCa027TumorGenitalesFem:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Defca027Tumorgenitalesfem
+                economics_defCa028TumorProstata:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Defca028Tumorprostata
+                economics_defCa029TumorGenitalesMasc:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Defca029Tumorgenitalesmasc
+                economics_defCa038TumoresInSitu:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Defca038Tumoresinsitu
+                economics_defCa044Diabetes:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Defca044Diabetes
+                economics_defCa044045EnfEndocrinasNutrMetab:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Defca044045Enfendocrinasnutrmetab
+                economics_defCa046TranMentalOrganicos:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Defca046Tranmentalorganicos
+                economics_defCa047TranMentalAlcohol:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Defca047Tranmentalalcohol
+                economics_defCa050052EnfSistNervSens:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Defca050052Enfsistnervsens
+                economics_defCa051Alzheimer:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Defca051Alzheimer
+                economics_defCa053061EnfSistCirc:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Defca053061Enfsistcirc
+                economics_defCa056OtrosIsqCorazon:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Defca056Otrosisqcorazon
+                economics_defCa057InsufCard:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Defca057Insufcard
+                economics_defCa064EnfRespInf:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Defca064Enfrespinf
+                economics_defCa067OtrosEnfResp:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Defca067Otrosenfresp
+                economics_defCa074076EnfSistOsteomusc:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Defca074076Enfsistosteomusc
+                economics_defCa080OtrosEnfGenitourin:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Defca080Otrosenfgenitourin
+                economics_defCa081EmbarazoPartoPuerp:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Defca081Embarazopartopuerp
+                economics_defCa082AfecPerinatal:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Defca082Afecperinatal
+                economics_defCa083085MalformCongen:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Defca083085Malformcongen
+                economics_defCa086ParoCardiaco:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Defca086Parocardiaco
+                economics_defCa086089SintomasNoClas:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Defca086089Sintomasnoclas
+                economics_defCa087Senilidad:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Defca087Senilidad
+                economics_defCa090AccTraffico:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Defca090Acctraffico
+                economics_defCa090102CausasExtMort:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Defca090102Causasextmort
+                economics_defCa091OtrosAccTransp:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Defca091Otrosacctransp
+                economics_defCa095EnvenenamientoPsicofarm:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Defca095Envenenamientopsicofarm
+                economics_defCa096OtrosEnvenenamientos:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Defca096Otrosenvenenamientos
+                economics_defCa097OtrosAcc:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Defca097Otrosacc
+                economics_nucleosTipoParejaNoPareja:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Nucleostipoparejanopareja
+                economics_ocupParadosTasasCaProvOcup:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Ocupparadostasascaprovocup
+                economics_ocupParadosTasasCaProvTasaAct:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Ocupparadostasascaprovtasaact
+                economics_ocupParadosTasasCaProvTasaParo:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Ocupparadostasascaprovtasaparo
+                economics_censoPoblMunNumHab:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Censopoblmunnumhab
+                economics_censosPoblViv2021NumViv:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Censospoblviv2021Numviv
+                economics_censosPoblViv2021EdadMediaViv:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Censospoblviv2021Edadmediaviv
+                economics_censosPoblViv2021SupMedia:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Censospoblviv2021Supmedia
+                economics_parejasNuclFamNumMedioHijos:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Parejasnuclfamnummediohijos
+                economics_transUrbanoMetroAutoBusVarAnual:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Transurbanometroautobusvaranual
+                economics_transUrbanoMetroAutoBusViajTransp:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Transurbanometroautobusviajtransp
+                economics_transUrbanoMetroAutoMetroVarAnual:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Transurbanometroautometrovaranual
+                economics_vivTurMunicPlazas:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Vivturmunicplazas
+                economics_vivTurMunicPlazasPorVivTur:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Vivturmunicplazasporvivtur
+                economics_distRentaSecMediaRentaUniCons:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Distrentasecmediarentaunicons
+                economics_distRentaSecMedianaRentaUniCons:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Distrentasecmedianarentaunicons
+                economics_distRentaSecRentaBrutaHogar:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Distrentasecrentabrutahogar
+                economics_distRentaSecRentaBrutaPer:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Distrentasecrentabrutaper
+                economics_distRentaSecRentaNetaHogar:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Distrentasecrentanetahogar
+                economics_distRentaSecRentaNetaPer:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Distrentasecrentanetaper
+                economics_distFuenteIngFuenteOtrasPrest:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Distfuenteingfuenteotrasprest
+                economics_distFuenteIngFuenteOtrosIng:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Distfuenteingfuenteotrosing
+                economics_distFuenteIngFuentePensiones:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Distfuenteingfuentepensiones
+                economics_distFuenteIngFuentePrestDesemp:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Distfuenteingfuenteprestdesemp
+                economics_distFuenteIngFuenteSalario:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Distfuenteingfuentesalario
+                economics_distFuenteIngRentaMediaPer:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Distfuenteingrentamediaper
+                economics_indDemografEdadMediaPobl:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Inddemografedadmediapobl
+                economics_indDemografPoblacion:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Inddemografpoblacion
+                economics_indDemografPorcHogUnip:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Inddemografporchogunip
+                economics_indDemografPorcPoblEsp:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Inddemografporcpoblesp
+                economics_indDemografPorcPoblMenor18:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Inddemografporcpoblmenor18
+                economics_indDemografTamMedioHogar:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Inddemograftammediohogar
+                economics_pobDebUmbr2021_65MasAnosIngBajo40:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Pobdebumbr2021 65Masanosingbajo40
+                economics_pobDebUmbr2021_65MasAnosIngBajo50:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Pobdebumbr2021 65Masanosingbajo50
+                economics_pobDebUmbr2021_65MasAnosIngBajo60:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Pobdebumbr2021 65Masanosingbajo60
+                economics_pobDebUmbr2021_65MasAnosIngSobre140:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Pobdebumbr2021 65Masanosingsobre140
+                economics_pobDebUmbr2021_65MasAnosIngSobre200:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Pobdebumbr2021 65Masanosingsobre200
+                economics_pobDebUmbr2021_18_64AnosIngBajo40:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Pobdebumbr2021 18 64Anosingbajo40
+                economics_pobDebUmbr2021_18_64AnosIngBajo60:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Pobdebumbr2021 18 64Anosingbajo60
+                economics_pobDebUmbr2021_18_64AnosIngSobre140:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Pobdebumbr2021 18 64Anosingsobre140
+                economics_pobDebUmbr2021_18_64AnosIngSobre200:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Pobdebumbr2021 18 64Anosingsobre200
+                economics_pobDebUmbr2021Menor18IngBajo40:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Pobdebumbr2021Menor18Ingbajo40
+                economics_pobDebUmbr2021Menor18IngBajo60:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Pobdebumbr2021Menor18Ingbajo60
+                economics_indAlq2015_2022BiAlvhepcoTvc22:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Indalq2015 2022Bialvhepcotvc22
+                economics_indAlq2015_2022BiAlvhepcoTvu22:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Indalq2015 2022Bialvhepcotvu22
+                economics_indAlq2015_2022Alqm2LvMVc22:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Indalq2015 2022Alqm2Lvmvc22
+                economics_indAlq2015_2022Alqm2Lv25Vc22:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Indalq2015 2022Alqm2Lv25Vc22
+                economics_indAlq2015_2022Alqm2Lv75Vc22:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Indalq2015 2022Alqm2Lv75Vc22
+                economics_indAlq2015_2022Alqm2LvMVu22:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Indalq2015 2022Alqm2Lvmvu22
+                economics_indAlq2015_2022Alqm2Lv25Vu22:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Indalq2015 2022Alqm2Lv25Vu22
+                economics_indAlq2015_2022Alqm2Lv75Vu22:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Indalq2015 2022Alqm2Lv75Vu22
+                economics_indAlq2015_2022Alqtbid12MVc22:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Indalq2015 2022Alqtbid12Mvc22
+                economics_indAlq2015_2022Alqtbid12_25Vc22:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Indalq2015 2022Alqtbid12 25Vc22
+                economics_indAlq2015_2022Alqtbid12_75Vc22:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Indalq2015 2022Alqtbid12 75Vc22
+                economics_indAlq2015_2022Alqtbid12MVu22:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Indalq2015 2022Alqtbid12Mvu22
+                economics_indAlq2015_2022Alqtbid12_25Vu22:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Indalq2015 2022Alqtbid12 25Vu22
+                economics_indAlq2015_2022Alqtbid12_75Vu22:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Indalq2015 2022Alqtbid12 75Vu22
+                economics_indAlq2015_2022Slvm2MVc22:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Indalq2015 2022Slvm2Mvc22
+                economics_indAlq2015_2022Slvm2_25Vc22:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Indalq2015 2022Slvm2 25Vc22
+                economics_indAlq2015_2022Slvm2_75Vc22:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Indalq2015 2022Slvm2 75Vc22
+                economics_indAlq2015_2022Slvm2MVu22:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Indalq2015 2022Slvm2Mvu22
+                economics_indAlq2015_2022Slvm2_25Vu22:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Indalq2015 2022Slvm2 25Vu22
+                economics_indAlq2015_2022Slvm2_75Vu22:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Indalq2015 2022Slvm2 75Vu22
+                economics_indAlqSecAlqm2LvMVc22:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Indalqsecalqm2Lvmvc22
+                economics_indAlqSecAlqm2LvMVu22:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Indalqsecalqm2Lvmvu22
+                economics_indAlqSecAlqm2Lv25Vu22:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Indalqsecalqm2Lv25Vu22
+                economics_indAlqSecAlqtbid12MVc22:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Indalqsecalqtbid12Mvc22
+                economics_indAlqSecAlqtbid12MVu22:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Indalqsecalqtbid12Mvu22
+                economics_gastMunicResDistPctGrupo1AlimBebNoAlc:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Gastmunicresdistpctgrupo1Alimbebnoalc
+                economics_gastMunicResDistPctGrupo10Ensenanza:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Gastmunicresdistpctgrupo10Ensenanza
+                economics_gastMunicResDistPctGrupo11Hoteles:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Gastmunicresdistpctgrupo11Hoteles
+                economics_gastMunicResDistPctGrupo12Otros:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Gastmunicresdistpctgrupo12Otros
+                economics_gastMunicResDistPctGrupo2AlcoholTabaco:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Gastmunicresdistpctgrupo2Alcoholtabaco
+                economics_gastMunicResDistPctGrupo3VestCalzado:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Gastmunicresdistpctgrupo3Vestcalzado
+                economics_gastMunicResDistPctGrupo4ViviendaAgua:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Gastmunicresdistpctgrupo4Viviendaagua
+                economics_gastMunicResDistPctGrupo5Mobiliario:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Gastmunicresdistpctgrupo5Mobiliario
+                economics_gastMunicResDistPctGrupo6Salud:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Gastmunicresdistpctgrupo6Salud
+                economics_gastMunicResDistPctGrupo7Transportes:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Gastmunicresdistpctgrupo7Transportes
+                economics_gastMunicResDistPctGrupo8Comunic:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Gastmunicresdistpctgrupo8Comunic
+                economics_gastMunicResDistPctGrupo9Ocio:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Gastmunicresdistpctgrupo9Ocio
+                economics_gastMunicResDistPctTotal:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Gastmunicresdistpcttotal
+                economics_gastMunicResGastoHogarGrupo1AlimBebNoAlc:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Gastmunicresgastohogargrupo1Alimbebnoalc
+                economics_gastMunicResGastoHogarGrupo10Ensenanza:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Gastmunicresgastohogargrupo10Ensenanza
+                economics_gastMunicResGastoHogarGrupo11Hoteles:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Gastmunicresgastohogargrupo11Hoteles
+                economics_gastMunicResGastoHogarGrupo12Otros:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Gastmunicresgastohogargrupo12Otros
+                economics_gastMunicResGastoHogarGrupo2AlcoholTabaco:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Gastmunicresgastohogargrupo2Alcoholtabaco
+                economics_gastMunicResGastoHogarGrupo3VestCalzado:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Gastmunicresgastohogargrupo3Vestcalzado
+                economics_gastMunicResGastoHogarGrupo4ViviendaAgua:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Gastmunicresgastohogargrupo4Viviendaagua
+                economics_gastMunicResGastoHogarGrupo5Mobiliario:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Gastmunicresgastohogargrupo5Mobiliario
+                economics_gastMunicResGastoHogarGrupo6Salud:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Gastmunicresgastohogargrupo6Salud
+                economics_gastMunicResGastoHogarGrupo7Transportes:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Gastmunicresgastohogargrupo7Transportes
+                economics_gastMunicResGastoHogarGrupo8Comunicaciones:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Gastmunicresgastohogargrupo8Comunicaciones
+                economics_gastMunicResGastoHogarGrupo9Ocio:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Gastmunicresgastohogargrupo9Ocio
+                economics_gastMunicResGastoHogarTotal:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Gastmunicresgastohogartotal
+                economics_gastMunicResGastoPerGrupo1AlimBebNoAlc:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Gastmunicresgastopergrupo1Alimbebnoalc
+                economics_gastMunicResGastoPerGrupo10Ensenanza:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Gastmunicresgastopergrupo10Ensenanza
+                economics_gastMunicResGastoPerGrupo11Hoteles:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Gastmunicresgastopergrupo11Hoteles
+                economics_gastMunicResGastoPerGrupo12Otros:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Gastmunicresgastopergrupo12Otros
+                economics_gastMunicResGastoPerGrupo2AlcoholTabaco:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Gastmunicresgastopergrupo2Alcoholtabaco
+                economics_gastMunicResGastoPerGrupo3VestCalzado:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Gastmunicresgastopergrupo3Vestcalzado
+                economics_gastMunicResGastoPerGrupo4ViviendaAgua:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Gastmunicresgastopergrupo4Viviendaagua
+                economics_gastMunicResGastoPerGrupo5Mobiliario:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Gastmunicresgastopergrupo5Mobiliario
+                economics_gastMunicResGastoPerGrupo6Salud:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Gastmunicresgastopergrupo6Salud
+                economics_gastMunicResGastoPerGrupo7Transportes:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Gastmunicresgastopergrupo7Transportes
+                economics_gastMunicResGastoPerGrupo8Comunicaciones:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Gastmunicresgastopergrupo8Comunicaciones
+                economics_gastMunicResGastoPerGrupo9Ocio:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Gastmunicresgastopergrupo9Ocio
+                economics_gastMunicResGastoPerTotal:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Gastmunicresgastopertotal
+                economics_probHogaresEdif10MasAntes1971ContamOlores:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Probhogaresedif10Masantes1971Contamolores
+                economics_probHogaresEdif10MasAntes1971Delincuencia:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Probhogaresedif10Masantes1971Delincuencia
+                economics_probHogaresEdif10MasAntes1971TotalAbs:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Probhogaresedif10Masantes1971Totalabs
+                economics_probHogaresEdif10Mas1971_1990MolestTurHost:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Probhogaresedif10Mas1971 1990Molestturhost
+                economics_probHogaresEdif10Mas1971_1990PocasZonasVerdes:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Probhogaresedif10Mas1971 1990Pocaszonasverdes
+                economics_probHogaresEdif10MasPost1990MalasComunic:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Probhogaresedif10Maspost1990Malascomunic
+                economics_probHogaresEdif10MasPost1990PocasZonasVerdes:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Probhogaresedif10Maspost1990Pocaszonasverdes
+                economics_probHogaresEdif10MasTotalMolestTurHost:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Probhogaresedif10Mastotalmolestturhost
+                economics_probHogaresEdif2VivAntes1971PocaLimpieza:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Probhogaresedif2Vivantes1971Pocalimpieza
+                economics_probHogaresEdif2VivAntes1971PocasZonasVerdes:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Probhogaresedif2Vivantes1971Pocaszonasverdes
+                economics_probHogaresEdif2Viv1971_1990MalasComunic:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Probhogaresedif2Viv1971 1990Malascomunic
+                economics_probHogaresEdif2Viv1971_1990MolestTurHost:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Probhogaresedif2Viv1971 1990Molestturhost
+                economics_probHogaresEdif39VivAntes1971MalasComunic:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Probhogaresedif39Vivantes1971Malascomunic
+                economics_probHogaresEdif39Viv1971_1990ContamOlores:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Probhogaresedif39Viv1971 1990Contamolores
+                economics_probHogaresEdif39Viv1971_1990MalasComunic:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Probhogaresedif39Viv1971 1990Malascomunic
+                economics_probHogaresTotalPost1990PocasZonasVerdes:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Probhogarestotalpost1990Pocaszonasverdes
+                economics_probHogaresVivUnifam1971_1990MolestTurHost:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Probhogaresvivunifam1971 1990Molestturhost
+                economics_numIndependientes:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Numindependientes
+                economics_ingresosAnualesPerIndepend:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Ingresosanualesperindepend
+                economics_savingsCapabilityMensual:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Savingscapabilitymensual
+                economics_housesAndSuppliesMensual:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Housesandsuppliesmensual
+                economics_rentalCapacityMensual:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Rentalcapacitymensual
+                economics_homeCapacityMensual:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Economics Homecapacitymensual
+                Intervinientes:
+                  anyOf:
+                  - type: integer
+                  - type: 'null'
+                  title: Intervinientes
+                Inquilinos:
+                  anyOf:
+                  - type: integer
+                  - type: 'null'
+                  title: Inquilinos
+                Avalistas:
+                  anyOf:
+                  - type: integer
+                  - type: 'null'
+                  title: Avalistas
+                location_type:
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+                  title: Location Type
+                request_date:
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+                  title: Request Date
+                requestAmount:
+                  anyOf:
+                  - type: number
+                  - type: 'null'
+                  title: Requestamount
+              required:
+              - traceId
+              - operationTraceId
+              - clientId
+              - userId
+              - endpoint
+              - country
+              - batchId
+              - idCheck_score
+              - idCheck_correlation
+              - idCheck_alert
+              - emailValidation_valid
+              - emailValidation_domain
+              - emailValidation_provider
+              - emailValidation_syntaxError
+              - emailValidation_domainError
+              - emailValidation_disposable
+              - emailValidation_freemail
+              - emailVerification_verified
+              - emailVerification_status
+              - emailVerification_deferred
+              - emailVerification_catchAll
+              - phoneValidation_valid
+              - phoneValidation_type
+              - phoneValidation_location
+              - phoneValidation_country
+              - phoneValidation_mobile
+              - phoneVerification_valid
+              - phoneVerification_verified
+              - phoneVerification_status
+              - phoneVerification_mobile
+              - phoneVerification_ported
+              - phoneVerification_mcc
+              - phoneVerification_mnc
+              - phoneVerification_currentNetwork
+              - phoneVerification_originNetwork
+              - phoneVerification_portedNetwork
+              - phoneVerification_type
+              - phoneVerification_location
+              - geoCheck_score
+              - geoCheck_parsedAddress_country
+              - geoCheck_parsedAddress_level1
+              - geoCheck_parsedAddress_level2
+              - witnesses_sqm
+              - witnesses_sqmPrice
+              - witnesses_estimatedPrice
+              - economics_epaT4_2023TrimestreActual
+              - economics_epaT4_2023VarTrimAntDif
+              - economics_epaT4_2023VarTrimAntPct
+              - economics_epaT4_2023VarTrimAnoAntDif
+              - economics_epaT4_2023VarTrimAnoAntPct
+              - economics_defCa001EnfInfeccIntest
+              - economics_defCa001008EnfInfeccParas
+              - economics_defCa001102TodasCausas
+              - economics_defCa002Tuberculosis
+              - economics_defCa003EnfMeningo
+              - economics_defCa006Sida
+              - economics_defCa009TumorLabioBocaFaringe
+              - economics_defCa009041Tumores
+              - economics_defCa00cSindInflamCovid
+              - economics_defCa012TumorColon
+              - economics_defCa015TumorPancreas
+              - economics_defCa018TumorTraqueaBronqPulmon
+              - economics_defCa023TumorMama
+              - economics_defCa024TumorCuelloUtero
+              - economics_defCa027TumorGenitalesFem
+              - economics_defCa028TumorProstata
+              - economics_defCa029TumorGenitalesMasc
+              - economics_defCa038TumoresInSitu
+              - economics_defCa044Diabetes
+              - economics_defCa044045EnfEndocrinasNutrMetab
+              - economics_defCa046TranMentalOrganicos
+              - economics_defCa047TranMentalAlcohol
+              - economics_defCa050052EnfSistNervSens
+              - economics_defCa051Alzheimer
+              - economics_defCa053061EnfSistCirc
+              - economics_defCa056OtrosIsqCorazon
+              - economics_defCa057InsufCard
+              - economics_defCa064EnfRespInf
+              - economics_defCa067OtrosEnfResp
+              - economics_defCa074076EnfSistOsteomusc
+              - economics_defCa080OtrosEnfGenitourin
+              - economics_defCa081EmbarazoPartoPuerp
+              - economics_defCa082AfecPerinatal
+              - economics_defCa083085MalformCongen
+              - economics_defCa086ParoCardiaco
+              - economics_defCa086089SintomasNoClas
+              - economics_defCa087Senilidad
+              - economics_defCa090AccTraffico
+              - economics_defCa090102CausasExtMort
+              - economics_defCa091OtrosAccTransp
+              - economics_defCa095EnvenenamientoPsicofarm
+              - economics_defCa096OtrosEnvenenamientos
+              - economics_defCa097OtrosAcc
+              - economics_nucleosTipoParejaNoPareja
+              - economics_ocupParadosTasasCaProvOcup
+              - economics_ocupParadosTasasCaProvTasaAct
+              - economics_ocupParadosTasasCaProvTasaParo
+              - economics_censoPoblMunNumHab
+              - economics_censosPoblViv2021NumViv
+              - economics_censosPoblViv2021EdadMediaViv
+              - economics_censosPoblViv2021SupMedia
+              - economics_parejasNuclFamNumMedioHijos
+              - economics_transUrbanoMetroAutoBusVarAnual
+              - economics_transUrbanoMetroAutoBusViajTransp
+              - economics_transUrbanoMetroAutoMetroVarAnual
+              - economics_vivTurMunicPlazas
+              - economics_vivTurMunicPlazasPorVivTur
+              - economics_distRentaSecMediaRentaUniCons
+              - economics_distRentaSecMedianaRentaUniCons
+              - economics_distRentaSecRentaBrutaHogar
+              - economics_distRentaSecRentaBrutaPer
+              - economics_distRentaSecRentaNetaHogar
+              - economics_distRentaSecRentaNetaPer
+              - economics_distFuenteIngFuenteOtrasPrest
+              - economics_distFuenteIngFuenteOtrosIng
+              - economics_distFuenteIngFuentePensiones
+              - economics_distFuenteIngFuentePrestDesemp
+              - economics_distFuenteIngFuenteSalario
+              - economics_distFuenteIngRentaMediaPer
+              - economics_indDemografEdadMediaPobl
+              - economics_indDemografPoblacion
+              - economics_indDemografPorcHogUnip
+              - economics_indDemografPorcPoblEsp
+              - economics_indDemografPorcPoblMenor18
+              - economics_indDemografTamMedioHogar
+              - economics_pobDebUmbr2021_65MasAnosIngBajo40
+              - economics_pobDebUmbr2021_65MasAnosIngBajo50
+              - economics_pobDebUmbr2021_65MasAnosIngBajo60
+              - economics_pobDebUmbr2021_65MasAnosIngSobre140
+              - economics_pobDebUmbr2021_65MasAnosIngSobre200
+              - economics_pobDebUmbr2021_18_64AnosIngBajo40
+              - economics_pobDebUmbr2021_18_64AnosIngBajo60
+              - economics_pobDebUmbr2021_18_64AnosIngSobre140
+              - economics_pobDebUmbr2021_18_64AnosIngSobre200
+              - economics_pobDebUmbr2021Menor18IngBajo40
+              - economics_pobDebUmbr2021Menor18IngBajo60
+              - economics_indAlq2015_2022BiAlvhepcoTvc22
+              - economics_indAlq2015_2022BiAlvhepcoTvu22
+              - economics_indAlq2015_2022Alqm2LvMVc22
+              - economics_indAlq2015_2022Alqm2Lv25Vc22
+              - economics_indAlq2015_2022Alqm2Lv75Vc22
+              - economics_indAlq2015_2022Alqm2LvMVu22
+              - economics_indAlq2015_2022Alqm2Lv25Vu22
+              - economics_indAlq2015_2022Alqm2Lv75Vu22
+              - economics_indAlq2015_2022Alqtbid12MVc22
+              - economics_indAlq2015_2022Alqtbid12_25Vc22
+              - economics_indAlq2015_2022Alqtbid12_75Vc22
+              - economics_indAlq2015_2022Alqtbid12MVu22
+              - economics_indAlq2015_2022Alqtbid12_25Vu22
+              - economics_indAlq2015_2022Alqtbid12_75Vu22
+              - economics_indAlq2015_2022Slvm2MVc22
+              - economics_indAlq2015_2022Slvm2_25Vc22
+              - economics_indAlq2015_2022Slvm2_75Vc22
+              - economics_indAlq2015_2022Slvm2MVu22
+              - economics_indAlq2015_2022Slvm2_25Vu22
+              - economics_indAlq2015_2022Slvm2_75Vu22
+              - economics_indAlqSecAlqm2LvMVc22
+              - economics_indAlqSecAlqm2LvMVu22
+              - economics_indAlqSecAlqm2Lv25Vu22
+              - economics_indAlqSecAlqtbid12MVc22
+              - economics_indAlqSecAlqtbid12MVu22
+              - economics_gastMunicResDistPctGrupo1AlimBebNoAlc
+              - economics_gastMunicResDistPctGrupo10Ensenanza
+              - economics_gastMunicResDistPctGrupo11Hoteles
+              - economics_gastMunicResDistPctGrupo12Otros
+              - economics_gastMunicResDistPctGrupo2AlcoholTabaco
+              - economics_gastMunicResDistPctGrupo3VestCalzado
+              - economics_gastMunicResDistPctGrupo4ViviendaAgua
+              - economics_gastMunicResDistPctGrupo5Mobiliario
+              - economics_gastMunicResDistPctGrupo6Salud
+              - economics_gastMunicResDistPctGrupo7Transportes
+              - economics_gastMunicResDistPctGrupo8Comunic
+              - economics_gastMunicResDistPctGrupo9Ocio
+              - economics_gastMunicResDistPctTotal
+              - economics_gastMunicResGastoHogarGrupo1AlimBebNoAlc
+              - economics_gastMunicResGastoHogarGrupo10Ensenanza
+              - economics_gastMunicResGastoHogarGrupo11Hoteles
+              - economics_gastMunicResGastoHogarGrupo12Otros
+              - economics_gastMunicResGastoHogarGrupo2AlcoholTabaco
+              - economics_gastMunicResGastoHogarGrupo3VestCalzado
+              - economics_gastMunicResGastoHogarGrupo4ViviendaAgua
+              - economics_gastMunicResGastoHogarGrupo5Mobiliario
+              - economics_gastMunicResGastoHogarGrupo6Salud
+              - economics_gastMunicResGastoHogarGrupo7Transportes
+              - economics_gastMunicResGastoHogarGrupo8Comunicaciones
+              - economics_gastMunicResGastoHogarGrupo9Ocio
+              - economics_gastMunicResGastoHogarTotal
+              - economics_gastMunicResGastoPerGrupo1AlimBebNoAlc
+              - economics_gastMunicResGastoPerGrupo10Ensenanza
+              - economics_gastMunicResGastoPerGrupo11Hoteles
+              - economics_gastMunicResGastoPerGrupo12Otros
+              - economics_gastMunicResGastoPerGrupo2AlcoholTabaco
+              - economics_gastMunicResGastoPerGrupo3VestCalzado
+              - economics_gastMunicResGastoPerGrupo4ViviendaAgua
+              - economics_gastMunicResGastoPerGrupo5Mobiliario
+              - economics_gastMunicResGastoPerGrupo6Salud
+              - economics_gastMunicResGastoPerGrupo7Transportes
+              - economics_gastMunicResGastoPerGrupo8Comunicaciones
+              - economics_gastMunicResGastoPerGrupo9Ocio
+              - economics_gastMunicResGastoPerTotal
+              - economics_probHogaresEdif10MasAntes1971ContamOlores
+              - economics_probHogaresEdif10MasAntes1971Delincuencia
+              - economics_probHogaresEdif10MasAntes1971TotalAbs
+              - economics_probHogaresEdif10Mas1971_1990MolestTurHost
+              - economics_probHogaresEdif10Mas1971_1990PocasZonasVerdes
+              - economics_probHogaresEdif10MasPost1990MalasComunic
+              - economics_probHogaresEdif10MasPost1990PocasZonasVerdes
+              - economics_probHogaresEdif10MasTotalMolestTurHost
+              - economics_probHogaresEdif2VivAntes1971PocaLimpieza
+              - economics_probHogaresEdif2VivAntes1971PocasZonasVerdes
+              - economics_probHogaresEdif2Viv1971_1990MalasComunic
+              - economics_probHogaresEdif2Viv1971_1990MolestTurHost
+              - economics_probHogaresEdif39VivAntes1971MalasComunic
+              - economics_probHogaresEdif39Viv1971_1990ContamOlores
+              - economics_probHogaresEdif39Viv1971_1990MalasComunic
+              - economics_probHogaresTotalPost1990PocasZonasVerdes
+              - economics_probHogaresVivUnifam1971_1990MolestTurHost
+              - economics_numIndependientes
+              - economics_ingresosAnualesPerIndepend
+              - economics_savingsCapabilityMensual
+              - economics_housesAndSuppliesMensual
+              - economics_rentalCapacityMensual
+              - economics_homeCapacityMensual
+              - Intervinientes
+              - Inquilinos
+              - Avalistas
+              - location_type
+              - request_date
+              - requestAmount
+              title: NOWOValidationModel
+              type: object
+            description: Array of financial data objects for machine learning scoring
+components:
+  schemas:
+    ComponentInfo:
+      properties:
+        status:
+          anyOf:
+          - type: string
+            enum:
+            - UP
+            - DOWN
+          - type: 'null'
+          title: Status
+        enabled:
+          type: boolean
+          title: Enabled
+        healthy:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Healthy
+        critical_mode:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Critical Mode
+        client_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Client Type
+        client_available:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Client Available
+        client_info:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Client Info
+        error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error
+      type: object
+      required:
+      - enabled
+      title: ComponentInfo
+      description: "Pydantic model representing health information for a system component.\n\
+        \nThis model provides a flexible structure for component health information\n\
+        that can accommodate different types of components (audit, operational data,\
+        \ etc.)\nwhile maintaining consistency in the basic health status fields.\n\
+        \nAttributes\n----------\nstatus : Optional[Literal[\"UP\", \"DOWN\"]]\n \
+        \   The health status of the component, if applicable.\nenabled : bool\n \
+        \   Whether the component is enabled in the system configuration.\nhealthy\
+        \ : Optional[bool]\n    Whether the component is healthy and operational,\
+        \ if applicable.\ncritical_mode : Optional[bool]\n    Whether the component\
+        \ is in critical mode (failures affect main operations).\nclient_type : Optional[str]\n\
+        \    The type of client used by this component (e.g., \"GooglePubSubClient\"\
+        ).\nclient_available : Optional[bool]\n    Whether the client is available\
+        \ and connected, if applicable.\nclient_info : Optional[Dict[str, Any]]\n\
+        \    Additional client information, if available.\nerror : Optional[str]\n\
+        \    Error message if the component is unhealthy or failed."
+    HTTPErrorResponse:
+      properties:
+        errorMessage:
+          type: string
+          title: Errormessage
+        errorType:
+          type: string
+          title: Errortype
+        details:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Details
+      type: object
+      required:
+      - errorMessage
+      - errorType
+      title: HTTPErrorResponse
+      description: "Pydantic model representing an HTTP error response for REST API\
+        \ endpoints.\n\nThis model standardizes error responses across all REST API\
+        \ endpoints, providing\na consistent structure for error messages and error\
+        \ types that clients can rely on.\nThe model includes both a descriptive error\
+        \ message and a categorized error type\nfor better error handling and debugging\
+        \ capabilities.\n\nFor validation errors, the model also includes optional\
+        \ structured error details\nthat provide field-level information about what\
+        \ went wrong during validation.\n\nAttributes\n----------\nerrorMessage :\
+        \ str\n    A descriptive error message explaining what went wrong during the\
+        \ request processing.\nerrorType : str\n    The categorized type of error\
+        \ that occurred, allowing clients to handle\n    different error scenarios\
+        \ appropriately. This aligns with ScoringHandlerErrorType values.\ndetails\
+        \ : Optional[Dict[str, Any]]\n    Optional structured error details, primarily\
+        \ used for validation errors.\n    For field validation errors, this contains\
+        \ fieldErrors with detailed information\n    about which fields failed validation\
+        \ and why."
+    HealthCheckResponse:
+      properties:
+        status:
+          type: string
+          enum:
+          - UP
+          - DOWN
+          title: Status
+        timestamp:
+          type: string
+          title: Timestamp
+        components:
+          additionalProperties:
+            $ref: '#/components/schemas/ComponentInfo'
+          type: object
+          title: Components
+      type: object
+      required:
+      - status
+      - timestamp
+      - components
+      title: HealthCheckResponse
+      description: "Pydantic model representing a health check response for the system.\n\
+        \nThis model standardizes health check responses across all health endpoints,\n\
+        providing a consistent structure for overall system status and individual\n\
+        component health information.\n\nThe model supports both successful health\
+        \ checks (status UP) and failed\nhealth checks (status DOWN) with detailed\
+        \ component information.\n\nAttributes\n----------\nstatus : Literal[\"UP\"\
+        , \"DOWN\"]\n    The overall health status of the system.\ntimestamp : str\n\
+        \    ISO 8601 timestamp of when the health check was performed.\ncomponents\
+        \ : Dict[str, ComponentInfo]\n    Dictionary mapping component names to their\
+        \ health information."
+    SuccessfulResponse:
+      properties:
+        score:
+          type: number
+          title: Score
+      type: object
+      required:
+      - score
+      title: SuccessfulResponse
+      description: "Pydantic model representing a successful HTTP response for REST\
+        \ API endpoints.\n\nThis model standardizes successful responses that return\
+        \ a score value from the\nscoring service, providing a consistent structure\
+        \ for successful operations.\n\nAttributes\n----------\nscore : float\n  \
+        \  The calculated score value returned by the scoring service API operation."

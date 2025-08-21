@@ -1,0 +1,41 @@
+[tool.poetry]
+name = "rdt-724-00128-nowo-es"
+version = "1.0.0"
+description = ""
+authors = ["Bruno Castellanos <b.castellanos@hocelot.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.10.12,<3.11"
+
+hocelot-api = "2.1.0"
+hocelot-rdt = "2.8.0"
+
+scipy = "1.9.3"
+PyYAML = "6.0.2"
+fastapi = "0.112.0"
+uvicorn = "0.22.0"
+lightgbm = "3.0.0"
+xgboost = "1.7.5"
+catboost = "1.2"
+pydantic = "2.8.2"
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.3.0"
+jupyter = "^1.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+# Production Artifact Registry
+[[tool.poetry.source]]
+name = "hocelot-pro"
+url = "https://europe-west1-python.pkg.dev/hocelot-europe-pro/github-python/simple/"
+priority = "supplemental"
+
+# Development Artifact Registry
+[[tool.poetry.source]]
+name = "hocelot-dev"
+url = "https://europe-west1-python.pkg.dev/hocelot-europe-dev/github-python/simple/"
+priority = "supplemental"
